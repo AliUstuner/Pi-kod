@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Robot Kontrol</title>
+  <style>
+    button {
+      width: 100px;
+      height: 50px;
+      margin: 5px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="text-align:center;">Robot Kontrol Paneli</h1>
+  <form action="/move" method="post" style="text-align:center;">
+    <button name="direction" value="forward">İleri</button><br>
+    <button name="direction" value="left">Sol</button>
+    <button name="direction" value="stop">Dur</button>
+    <button name="direction" value="right">Sağ</button><br>
+    <button name="direction" value="backward">Geri</button>
+  </form>
+</body>
+</html>
