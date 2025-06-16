@@ -1,0 +1,14 @@
+[Unit]
+Description=Flask Robot Kontrol Uygulaması
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /home/pi/robot_web_control/app.py
+WorkingDirectory=/home/pi/robot_web_control
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
