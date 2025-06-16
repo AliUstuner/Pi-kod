@@ -1,0 +1,32 @@
+from flask import Flask, render_template, request
+import serial
+
+print("[INFO] Flask ve serial modülleri yüklendi...")
+
+arduino = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+print("[INFO] Arduino bağlantısı tamamlandı.")
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    print("[INFO] Ana sayfa yüklendi.")
+    return render_template('index.html')
+
+@app.route('/move', methods=['POST'])
+def move():
+    direction = request.form['direction']
+    print(f"[INFO] Gelen komut: {direction}")
+    commands = {
+        'forward': b'F',
+        'backward': b'B',
+        'stop': b'S',
+        'right': b'R',
+        'left': b'L'
+    }
+    arduino.write(commands.get(direction, b'S'))
+    return render_template('index.html')
+
+if __name__ == "__main__":
+    print("[INFO] Sunucu başlatılıyor...")
+    app.run(host="0.0.0.0", port=5000)
