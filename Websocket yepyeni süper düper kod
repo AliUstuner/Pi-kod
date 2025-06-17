@@ -1,0 +1,24 @@
+import asyncio
+import serial
+import websockets
+
+# Arduino seri bağlantı (gerekirse ttyACM0 yerine ttyUSB0 olabilir)
+arduino = serial.Serial('/dev/ttyACM0', 9600)
+
+# WebSocket bağlantılarını yöneten fonksiyon
+async def handle_client(websocket, path):
+    await websocket.send("Status: Idle")
+
+    async for message in websocket:
+        print(f"[WS] Gelen komut: {message}")
+        arduino.write((message + '\n').encode())  # Arduino'ya komut gönder
+        await websocket.send(f"Executed: {message}")  # Web arayüzüne cevap
+
+# Sunucuyu başlatan ana fonksiyon
+async def main():
+    async with websockets.serve(handle_client, "0.0.0.0", 8765):
+        print("WebSocket sunucu başlatıldı: ws://0.0.0.0:8765")
+        await asyncio.Future()  # sonsuza kadar çalıştır
+
+# Programı çalıştır
+asyncio.run(main())
