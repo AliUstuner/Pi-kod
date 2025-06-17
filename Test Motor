@@ -1,0 +1,31 @@
+import pigpio
+import time
+
+pi = pigpio.pi()
+
+LEFT_MOTOR = 18  # BCM pin
+RIGHT_MOTOR = 19
+
+# Nötr konum (dur): 1500 µs
+# İleri: 1700-2000 µs, Geri: 1300-1000 µs
+
+# Motorları başlat
+pi.set_servo_pulsewidth(LEFT_MOTOR, 1500)
+pi.set_servo_pulsewidth(RIGHT_MOTOR, 1500)
+time.sleep(1)
+
+print("İleri")
+pi.set_servo_pulsewidth(LEFT_MOTOR, 1800)
+pi.set_servo_pulsewidth(RIGHT_MOTOR, 1800)
+time.sleep(2)
+
+print("Geri")
+pi.set_servo_pulsewidth(LEFT_MOTOR, 1200)
+pi.set_servo_pulsewidth(RIGHT_MOTOR, 1200)
+time.sleep(2)
+
+print("Dur")
+pi.set_servo_pulsewidth(LEFT_MOTOR, 1500)
+pi.set_servo_pulsewidth(RIGHT_MOTOR, 1500)
+
+pi.stop()
