@@ -1,0 +1,20 @@
+import asyncio
+import serial
+import websockets
+
+# Arduino ile seri bağlantı (portu gerektiğinde değiştir)
+arduino = serial.Serial('/dev/ttyACM0', 9600)
+
+async def handle_client(websocket, path):
+    await websocket.send("Status: Idle")
+
+    async for message in websocket:
+        print(f"[WS] Gelen komut: {message}")
+        arduino.write((message + '\n').encode())
+        await websocket.send(f"Executed: {message}")
+
+start_server = websockets.serve(handle_client, "0.0.0.0", 8765)
+
+print("WebSocket sunucu başlatıldı: ws://<RaspberryPi-IP>:8765")
+asyncio.get_event_loop().run_until_complete(start_server)
+asyncio.get_event_loop().run_forever()
