@@ -1,0 +1,41 @@
+#include <Servo.h>
+
+Servo leftMotor;
+Servo rightMotor;
+
+void setup() {
+  Serial.begin(9600);
+  leftMotor.attach(9);   // Sol motor PWM çıkışı
+  rightMotor.attach(10); // Sağ motor PWM çıkışı
+
+  stopMotors();
+}
+
+void loop() {
+  if (Serial.available()) {
+    String command = Serial.readStringUntil('\n');
+    command.trim(); // boşlukları sil
+
+    if (command == "forward") {
+      setMotors(1800, 1800); // 1800 µs ileri
+    } else if (command == "backward") {
+      setMotors(1200, 1200); // 1200 µs geri
+    } else if (command == "left") {
+      setMotors(1200, 1800); // sola dön
+    } else if (command == "right") {
+      setMotors(1800, 1200); // sağa dön
+    } else if (command == "stop") {
+      stopMotors();
+    }
+  }
+}
+
+void setMotors(int leftPulse, int rightPulse) {
+  leftMotor.writeMicroseconds(leftPulse);
+  rightMotor.writeMicroseconds(rightPulse);
+}
+
+void stopMotors() {
+  leftMotor.writeMicroseconds(1500); // Nötr
+  rightMotor.writeMicroseconds(1500);
+}
