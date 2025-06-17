@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Robot Kontrol</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen space-y-6">
+  <h1 class="text-3xl font-bold">Robot Kontrol</h1>
+  <div class="space-y-4">
+    <button onclick="send('forward')" class="bg-blue-500 px-6 py-3 rounded">İleri</button>
+    <div class="space-x-4">
+      <button onclick="send('left')" class="bg-green-500 px-6 py-3 rounded">Sol</button>
+      <button onclick="send('stop')" class="bg-red-500 px-6 py-3 rounded">Dur</button>
+      <button onclick="send('right')" class="bg-yellow-500 px-6 py-3 rounded">Sağ</button>
+    </div>
+    <button onclick="send('backward')" class="bg-purple-500 px-6 py-3 rounded">Geri</button>
+  </div>
+  <p id="status" class="text-lg mt-4">Durum: Bağlantı bekleniyor...</p>
+
+  <script>
+    const ws = new WebSocket("ws://" + location.hostname + ":8765");
+
+    ws.onmessage = (e) => {
+      document.getElementById("status").textContent = e.data;
+    }
+
+    function send(cmd) {
+      ws.send(cmd);
+    }
+  </script>
+</body>
+</html>
