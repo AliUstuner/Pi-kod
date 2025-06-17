@@ -1,0 +1,20 @@
+import asyncio
+import serial
+import websockets
+
+arduino = serial.Serial('/dev/ttyACM0', 9600)
+
+async def handle_client(websocket, path):
+    await websocket.send("Status: Idle")
+
+    async for message in websocket:
+        print(f"[WS] Gelen komut: {message}")
+        arduino.write((message + '\n').encode())
+        await websocket.send(f"Executed: {message}")
+
+async def main():
+    async with websockets.serve(handle_client, "0.0.0.0", 8765):
+        print("WebSocket sunucu başlatıldı: ws://0.0.0.0:8765")
+        await asyncio.Future()
+
+asyncio.run(main())
